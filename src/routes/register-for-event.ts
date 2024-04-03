@@ -3,12 +3,15 @@ import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { prisma } from "../lib/prisma";
 import { generateNanoId } from "../utils/generate-nano-id";
+import { BadRequest } from "./_errors/bad-request";
 
 export async function registerForEvent(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
     "/events/:eventId/attendees",
     {
       schema: {
+        summary: "Register an attendee in a event",
+        tags: ["Attendees"],
         body: z.object({
           name: z.string().min(4),
           email: z.string().email(),
@@ -28,7 +31,7 @@ export async function registerForEvent(app: FastifyInstance) {
       const { eventId } = request.params;
       const { name, email } = request.body;
 
-      let ticketId = generateNanoId();
+      let ticketId = await generateNanoId();
 
       const existingAttendee = await prisma.attendee.findUnique({
         where: {
@@ -37,7 +40,7 @@ export async function registerForEvent(app: FastifyInstance) {
       });
 
       if (existingAttendee !== null) {
-        let newTicketId = generateNanoId();
+        let newTicketId = await generateNanoId();
         ticketId = newTicketId;
       }
 
@@ -51,9 +54,9 @@ export async function registerForEvent(app: FastifyInstance) {
       });
 
       if (attendeeFromSameEvent !== null) {
-        throw new Error(
-          "Attendee with the same email already registered for this event"
-        );
+        throw new BadRequest(
+          "Attendee with the same e-mail already registered for this event"
+        ); //409
       }
 
       const [event, amountOfAttendeesForEvent] = await Promise.all([
@@ -73,7 +76,9 @@ export async function registerForEvent(app: FastifyInstance) {
         event?.maximumAttendees &&
         amountOfAttendeesForEvent >= event?.maximumAttendees
       ) {
-        throw new Error("Maximum number of attendees reached for this event");
+        throw new BadRequest(
+          "Maximum number of attendees reached for this event"
+        ); // 403
       }
 
       const attendees = await prisma.attendee.create({

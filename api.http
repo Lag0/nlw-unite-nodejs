@@ -1,23 +1,29 @@
+### Create a New Event
 POST http://localhost:3333/events
 Content-Type: application/json
 
 {
-  "title": "NLW Unite",
-  "maximumAttendees": 1
+  "title": 13123,
+  "maximumAttendees": 2
 }
 
-###
-
-POST http://localhost:3333/events/3c808fad-8868-4a2a-a441-c41d65071af0/attendees
+### Register a New Attendee
+POST http://localhost:3333/events/3c9e2aff-8c36-4546-b651-06bc94442a00/attendees
 Content-Type: application/json
 
 {
   "name": "Diego Fernandes",
-  "email": "diego3fernandes2@rocketseat.com.br"
+  "email": "diego@rocketseat.com.br"
 }
 
-###
-GET http://localhost:3333/events/3c808fad-8868-4a2a-a441-c41d65071af0
+### Get Event Info
+GET http://localhost:3333/events/8daef46f-12d7-4c87-9fb4-aae8301d2dea
 
-###
-GET http://localhost:3333/attendees/8DcM_TmsIe/badge
+### Get Attendees Badge
+GET http://localhost:3333/attendees/nscocnERbM/badge
+
+### Check In
+GET http://localhost:3333/attendees/nscocnERbM/check-in
+
+### Get All Attendees
+GET http://localhost:3333/events/8daef46f-12d7-4c87-9fb4-aae8301d2dea/attendees?query=Diego
