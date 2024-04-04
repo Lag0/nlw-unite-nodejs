@@ -2,6 +2,7 @@ import { prisma } from "../src/lib/prisma";
 import { faker } from "@faker-js/faker";
 import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
+import { generateNanoId } from "../src/utils/generate-nano-id";
 
 async function seed() {
   const eventId = "4d581edb-3f8c-4224-9182-c4398cfea080";
@@ -19,6 +20,7 @@ async function seed() {
   });
 
   const attendeesToInsert: Prisma.AttendeeUncheckedCreateInput[] = [];
+  const nanoID = await generateNanoId();
 
   for (let i = 0; i <= 120; i++) {
     attendeesToInsert.push({
@@ -26,6 +28,7 @@ async function seed() {
       name: faker.person.fullName(),
       email: faker.internet.email(),
       eventId,
+      ticketId: nanoID,
       createdAt: faker.date.recent({
         days: 30,
         refDate: dayjs().subtract(8, "days").toDate(),
@@ -40,7 +43,6 @@ async function seed() {
           },
         },
       ]),
-      ticketId: "",
     });
   }
 
