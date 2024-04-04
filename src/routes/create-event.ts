@@ -45,7 +45,7 @@ export async function createEvent(app: FastifyInstance) {
           title,
           details,
           maximumAttendees,
-          price: price ?? 0,
+          price: price,
           slug: slug,
         },
       });

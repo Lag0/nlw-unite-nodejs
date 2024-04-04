@@ -4,6 +4,9 @@ import { z } from "zod";
 import { prisma } from "../lib/prisma";
 import { BadRequest } from "./_errors/bad-request";
 
+// TODO: ? Maybe use Check-In as a boolean to check if the attendee has checked in or not
+// TODO: ? Also, add a query parameter to filter attendees by checked in status
+
 export async function getEventAttendees(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().get(
     "/events/:eventId/attendees",
@@ -48,6 +51,7 @@ export async function getEventAttendees(app: FastifyInstance) {
         prisma.attendee.findMany({
           select: {
             id: true,
+            ticketId: true,
             name: true,
             email: true,
             createdAt: true,
@@ -56,7 +60,6 @@ export async function getEventAttendees(app: FastifyInstance) {
                 createdAt: true,
               },
             },
-            ticketId: true,
           },
           where: {
             eventId,

@@ -17,6 +17,7 @@ import { CheckIn } from "./routes/check-in";
 import { getEventAttendees } from "./routes/get-event-attendees";
 import { errorHandler } from "./error-handler";
 import { request } from "http";
+import { editAttendeeInfo } from "./routes/edit-attendee-info";
 
 const app = fastify();
 
@@ -54,6 +55,7 @@ const routes = [
   { plugin: getAttendeeBadge },
   { plugin: CheckIn },
   { plugin: getEventAttendees },
+  { plugin: editAttendeeInfo },
 ];
 
 routes.forEach(({ plugin }) => app.register(plugin));
