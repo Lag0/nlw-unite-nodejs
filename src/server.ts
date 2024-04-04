@@ -45,14 +45,18 @@ app.register(fastifySwaggerUi, {
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
-app.register(createEvent);
-app.register(registerForEvent);
-app.register(getEvent);
-app.register(getAttendeeBadge);
-app.register(CheckIn);
-app.register(getEventAttendees);
-
 app.setErrorHandler(errorHandler);
+
+const routes = [
+  { plugin: createEvent, opts: { prefix: "/api" } },
+  { plugin: registerForEvent, opts: { prefix: "/api" } },
+  { plugin: getEvent, opts: { prefix: "/api" } },
+  { plugin: getAttendeeBadge, opts: { prefix: "/api" } },
+  { plugin: CheckIn, opts: { prefix: "/api" } },
+  { plugin: getEventAttendees, opts: { prefix: "/api" } },
+];
+
+routes.forEach(({ plugin, opts }) => app.register(plugin, opts));
 
 // Adicionando o host 0.0.0.0 para permitir conexões no React Native
 app.listen({ port: 3333, host: "0.0.0.0" }).then(() => {
