@@ -62,6 +62,7 @@ export async function getEventAttendees(app: FastifyInstance) {
             eventId,
             name: {
               contains: query ? query : undefined,
+              mode: "insensitive",
             },
           },
           take: 10,
@@ -75,12 +76,10 @@ export async function getEventAttendees(app: FastifyInstance) {
             ? {
                 eventId,
                 name: {
-                  contains: query,
-                },
+                  contains: query ? query : undefined,
+                  mode: "insensitive",
+                }
               }
-            : {
-                eventId,
-              },
         }),
       ]);
 
