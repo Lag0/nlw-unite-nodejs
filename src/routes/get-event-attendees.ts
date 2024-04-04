@@ -72,14 +72,13 @@ export async function getEventAttendees(app: FastifyInstance) {
           },
         }),
         prisma.attendee.count({
-          where: query
-            ? {
-                eventId,
-                name: {
-                  contains: query ? query : undefined,
-                  mode: "insensitive",
-                }
-              }
+          where: {
+            eventId,
+            name: {
+              contains: query ? query : undefined,
+              mode: "insensitive",
+            },
+          },
         }),
       ]);
 
