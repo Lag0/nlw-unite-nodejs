@@ -3,12 +3,12 @@ POST http://localhost:3333/events
 Content-Type: application/json
 
 {
-  "title": "NLW SUMMIT",
+  "title": "NLW SUMMIT V2",
   "maximumAttendees": 2
 }
 
 ### Register a New Attendee
-POST http://localhost:3333/events/2b4ea6ee-4345-4971-b475-bb7e21d824be/attendees
+POST http://localhost:3333/events/4d581edb-3f8c-4224-9182-c4398cfea080/attendees
 Content-Type: application/json
 
 {
@@ -17,22 +17,22 @@ Content-Type: application/json
 }
 
 ### Get Event Info
-GET http://localhost:3333/events/2b4ea6ee-4345-4971-b475-bb7e21d824be
+GET http://localhost:3333/events/4d581edb-3f8c-4224-9182-c4398cfea080
 
 ### Get Attendees Badge
 GET http://localhost:3333/attendees/5lz2c7vfJa/badge
 
 ### Check In
-GET http://localhost:3333/attendees/sEqFb9Yy1Z/check-in
+GET http://localhost:3333/attendees/9iVLX0Fwo7/check-in
 
 ### Get All Attendees
-GET http://localhost:3333/events/2b4ea6ee-4345-4971-b475-bb7e21d824be/attendees
+GET http://localhost:3333/events/4d581edb-3f8c-4224-9182-c4398cfea080/attendees
 
 ### Edit Attendee Info
-PUT http://localhost:3333/attendees/sEqFb9Yy1Z/edit
+PUT http://localhost:3333/attendees/9iVLX0Fwo7/edit
 Content-Type: application/json
 
 {
-  "name": "Diego Lopes",
-  "checkedInAt": null
+  "isCheckedIn": false,
+  "checkInDate": ""
 }

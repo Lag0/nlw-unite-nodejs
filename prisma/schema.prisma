@@ -19,29 +19,17 @@ model Event {
   @@map("events")
 }
 
-// Improve onDBDelete behavior to improve performance 
-
 model Attendee {
-  id        Int      @id @unique @default(autoincrement())
-  ticketId  String   @unique @map("ticket_id")
-  name      String
-  email     String
-  createdAt DateTime @default(now()) @map("created_at")
-  eventId   String   @map("event_id")
-  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  checkIn   CheckIn?
+  id          Int       @id @unique @default(autoincrement())
+  ticketId    String    @unique @map("ticket_id")
+  name        String
+  email       String
+  createdAt   DateTime  @default(now()) @map("created_at")
+  eventId     String    @map("event_id")
+  event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  isCheckedIn Boolean   @default(false) @map("is_checked_in")
+  checkInDate DateTime? @map("check_in_date")
 
   @@unique([eventId, email])
   @@map("attendees")
-}
-
-// Improve onDBDelete behavior to improve performance 
-
-model CheckIn {
-  id        Int      @id @unique @default(autoincrement())
-  ticketId  String   @unique @map("ticket_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  attendee  Attendee @relation(fields: [ticketId], references: [ticketId], onDelete: Cascade)
-
-  @@map("check_ins")
 }

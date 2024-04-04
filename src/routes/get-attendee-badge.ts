@@ -17,11 +17,12 @@ export async function getAttendeeBadge(app: FastifyInstance) {
         response: {
           200: z.object({
             badge: z.object({
+              eventTitle: z.string(),
               id: z.number(),
+              ticketId: z.string(),
               name: z.string(),
               email: z.string().email(),
-              eventTitle: z.string(),
-              ticketId: z.string(),
+              isCheckedIn: z.boolean(),
               checkInUrl: z.string().url(),
             }),
           }),
@@ -34,9 +35,10 @@ export async function getAttendeeBadge(app: FastifyInstance) {
       const attendee = await prisma.attendee.findUnique({
         select: {
           id: true,
+          ticketId: true,
           name: true,
           email: true,
-          ticketId: true,
+          isCheckedIn: true,
           event: {
             select: {
               title: true,
@@ -64,11 +66,12 @@ export async function getAttendeeBadge(app: FastifyInstance) {
 
       return reply.send({
         badge: {
+          eventTitle: attendee.event.title,
           id: attendee.id,
+          ticketId: attendee.ticketId,
           name: attendee.name,
           email: attendee.email,
-          eventTitle: attendee.event.title,
-          ticketId: attendee.ticketId,
+          isCheckedIn: attendee.isCheckedIn ?? false,
           checkInUrl: checkInUrl.toString(),
         },
       });

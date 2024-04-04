@@ -10,7 +10,7 @@ export async function editAttendeeInfo(app: FastifyInstance) {
     "/attendees/:ticketId/edit",
     {
       schema: {
-        summary: "Edit attendees info",
+        summary: "Edit attendee's info",
         tags: ["Attendees"],
         params: z.object({
           ticketId: z.string(),
@@ -18,18 +18,19 @@ export async function editAttendeeInfo(app: FastifyInstance) {
         body: z.object({
           name: z.string().optional(),
           email: z.string().email().optional(),
-          createdAt: z.string().optional(),
-          checkedInAt: z.string().optional().nullish(),
+          isCheckedIn: z.boolean().optional(),
+          checkInDate: z.string().optional(),
         }),
         response: {
           200: z.object({
-            message: z.string().optional(),
+            message: z.string(),
             attendee: z.object({
               ticketId: z.string(),
               name: z.string(),
               email: z.string().email(),
               createdAt: z.date(),
-              checkedInAt: z.date().nullish(),
+              isCheckedIn: z.boolean(),
+              checkInDate: z.date().nullish(),
             }),
           }),
         },
@@ -37,83 +38,55 @@ export async function editAttendeeInfo(app: FastifyInstance) {
     },
     async (request, reply) => {
       const { ticketId } = request.params;
-      const { name, email, checkedInAt, createdAt } = request.body;
+      const { name, email, isCheckedIn, checkInDate } = request.body;
 
       const currentAttendee = await prisma.attendee.findUnique({
         where: { ticketId },
-        select: {
-          id: true,
-          ticketId: true,
-          name: true,
-          email: true,
-          createdAt: true,
-          checkIn: {
-            select: {
-              createdAt: true,
-            },
-          },
-        },
       });
 
-      if (currentAttendee === null) {
+      if (!currentAttendee) {
         throw new BadRequest("Attendee not found");
       }
 
-      if (email) {
-        const attendeeEmailExists = await prisma.attendee.findFirst({
-          where: { email },
+      if (email && email !== currentAttendee.email) {
+        const emailInUse = await prisma.attendee.findMany({
+          where: {
+            email,
+            NOT: { ticketId },
+          },
         });
-
-        if (attendeeEmailExists) {
+        if (emailInUse.length > 0) {
           throw new BadRequest("Email already exists");
         }
       }
 
-      if (checkedInAt === null && currentAttendee.checkIn) {
-        await prisma.checkIn.delete({
-          where: { ticketId },
-        });
+      let parsedCheckInDate;
+      if (checkInDate) {
+        parsedCheckInDate = parseISO(checkInDate);
+        if (!isValid(parsedCheckInDate)) {
+          throw new BadRequest("Invalid check-in date format");
+        }
       }
 
-      const createdAtDate = createdAt ? parseISO(createdAt) : undefined;
-      const checkedInAtDate = checkedInAt ? parseISO(checkedInAt) : undefined;
-
-      if (createdAt && !isValid(createdAtDate)) {
-        throw new BadRequest("Invalid date format for createdAt");
-      }
-
-      if (checkedInAt && !isValid(checkedInAtDate)) {
-        throw new BadRequest("Invalid date format for checkedInAt");
-      }
-
-      if (checkedInAtDate && createdAtDate && createdAtDate > checkedInAtDate) {
-        throw new BadRequest(
-          "createdAt date should be before checkedInAt date"
-        );
-      }
-
-      const updatedAttendee = await prisma.attendee.update({
+      await prisma.attendee.update({
         where: { ticketId },
         data: {
           name: name ?? currentAttendee.name,
           email: email ?? currentAttendee.email,
-          createdAt: createdAt ?? currentAttendee.createdAt,
-          checkIn: {
-            update: {
-              createdAt: checkedInAt ?? currentAttendee.checkIn?.createdAt,
-            },
-          },
+          isCheckedIn: isCheckedIn ?? currentAttendee.isCheckedIn,
+          checkInDate: isCheckedIn ? parsedCheckInDate : null,
         },
       });
 
-      return reply.code(200).send({
+      reply.status(200).send({
+        message: "Attendee updated successfully",
         attendee: {
-          ticketId: updatedAttendee.ticketId,
-          name: updatedAttendee.name,
-          email: updatedAttendee.email,
-          createdAt: createdAtDate || currentAttendee.createdAt,
-          checkedInAt:
-            checkedInAtDate || currentAttendee.checkIn?.createdAt || null,
+          ticketId,
+          name: name ?? currentAttendee.name,
+          email: email ?? currentAttendee.email,
+          createdAt: currentAttendee.createdAt,
+          isCheckedIn: isCheckedIn ?? currentAttendee.isCheckedIn,
+          checkInDate: isCheckedIn ? parsedCheckInDate : null,
         },
       });
     }
