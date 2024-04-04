@@ -10,7 +10,7 @@ export async function CheckIn(app: FastifyInstance) {
     {
       schema: {
         summary: "Check in an attendee to an event",
-        tags: ["Attendees"],
+        tags: ["Check-Ins"],
         params: z.object({
           ticketId: z.string().min(10).max(10),
         }),

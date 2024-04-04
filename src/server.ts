@@ -16,6 +16,7 @@ import { getAttendeeBadge } from "./routes/get-attendee-badge";
 import { CheckIn } from "./routes/check-in";
 import { getEventAttendees } from "./routes/get-event-attendees";
 import { errorHandler } from "./error-handler";
+import { request } from "http";
 
 const app = fastify();
 
