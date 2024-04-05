@@ -33,6 +33,6 @@ PUT http://localhost:3333/attendees/9iVLX0Fwo7/edit
 Content-Type: application/json
 
 {
-  "isCheckedIn": true,
-  "checkInDate": "2024-04-04T23:31:21.184Z"
+  "isCheckedIn": false,
+  "checkInDate": ""
 }
