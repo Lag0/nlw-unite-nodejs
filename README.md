@@ -25,7 +25,7 @@ O back-end do Pass.in suporta as seguintes funcionalidades:
 
 ## Tecnologias Utilizadas
 
-- **Node.js** e **Express** para a construção do servidor
+- **Node.js** e **Fastify** para a construção do servidor
 - **Prisma** como ORM para o gerenciamento do banco de dados
 - **SQLite** para desenvolvimento e **PostgreSQL** para produção
 - **Swagger** para documentação da API
