@@ -13,12 +13,15 @@ Esta aplicação back-end lida com todas as operações de dados, desde o cadast
 
 O back-end do Pass.in suporta as seguintes funcionalidades:
 
-- Cadastro e gerenciamento de eventos
-- Visualização de detalhes do evento e lista de participantes
-- Inscrição de participantes em eventos
-- Emissão de credenciais para participantes
-- Check-in e cancelamento de check-in de participantes
-- Edição de dados de participantes
+- O organizador pode cadastrar um novo evento;
+- O organizador pode visualizar dados de um evento;
+- O organizador pode visualizar a lista de participantes;
+- O organizador pode realizar o check-in de um participante;
+- O organizador pode cancelar o check-in de um participante;
+- O organizador pode editar os dados de um participante;
+- O participante pode se inscrever em um evento;
+- O participante pode visualizar seu crachá de inscrição;
+- O participante pode realizar check-in no evento;
 
 ## Tecnologias Utilizadas
 
