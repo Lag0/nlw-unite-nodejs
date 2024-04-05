@@ -3,7 +3,6 @@ import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { prisma } from "../lib/prisma";
 import { BadRequest } from "./_errors/bad-request";
-import { request } from "http";
 
 export async function CheckIn(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().get(
@@ -18,6 +17,13 @@ export async function CheckIn(app: FastifyInstance) {
         response: {
           201: z.object({
             message: z.string(),
+            attendee: z.object({
+              ticketId: z.string(),
+              name: z.string(),
+              email: z.string().email(),
+              isCheckedIn: z.boolean(),
+              checkInDate: z.date().nullable(),
+            }),
           }),
         },
       },
@@ -35,7 +41,7 @@ export async function CheckIn(app: FastifyInstance) {
         throw new BadRequest("Attendee has already checked in");
       }
 
-      await prisma.attendee.update({
+      const attendeeUpdated = await prisma.attendee.update({
         where: { ticketId },
         data: {
           isCheckedIn: true,
@@ -43,7 +49,16 @@ export async function CheckIn(app: FastifyInstance) {
         },
       });
 
-      return reply.code(201).send({ message: "Attendee checked in" });
+      return reply.code(201).send({
+        message: "Attendee checked in",
+        attendee: {
+          ticketId: attendeeUpdated.ticketId,
+          name: attendeeUpdated.name,
+          email: attendeeUpdated.email,
+          isCheckedIn: attendeeUpdated.isCheckedIn,
+          checkInDate: attendeeUpdated.checkInDate,
+        },
+      });
     }
   );
 }

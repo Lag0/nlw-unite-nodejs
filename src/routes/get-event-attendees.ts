@@ -31,6 +31,7 @@ export async function getEventAttendees(app: FastifyInstance) {
                 email: z.string().email(),
                 createdAt: z.date(),
                 isCheckedIn: z.boolean(),
+                checkInDate: z.date().nullable(),
               })
             ),
             total: z.number(),
@@ -56,6 +57,7 @@ export async function getEventAttendees(app: FastifyInstance) {
             email: true,
             createdAt: true,
             isCheckedIn: true,
+            checkInDate: true,
           },
           where: {
             eventId,
@@ -94,6 +96,7 @@ export async function getEventAttendees(app: FastifyInstance) {
             email: attendee.email,
             createdAt: attendee.createdAt,
             isCheckedIn: attendee.isCheckedIn,
+            checkInDate: attendee.checkInDate,
           };
         }),
         total,

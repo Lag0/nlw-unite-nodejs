@@ -23,7 +23,7 @@ GET http://localhost:3333/events/4d581edb-3f8c-4224-9182-c4398cfea080
 GET http://localhost:3333/attendees/5lz2c7vfJa/badge
 
 ### Check In
-GET http://localhost:3333/attendees/9iVLX0Fwo7/check-in
+GET http://localhost:3333/attendees/m8f6Nf5grD/check-in
 
 ### Get All Attendees
 GET http://localhost:3333/events/4d581edb-3f8c-4224-9182-c4398cfea080/attendees
@@ -33,6 +33,6 @@ PUT http://localhost:3333/attendees/9iVLX0Fwo7/edit
 Content-Type: application/json
 
 {
-  "isCheckedIn": false,
-  "checkInDate": ""
+  "isCheckedIn": true,
+  "checkInDate": "2024-04-04T23:31:21.184Z"
 }

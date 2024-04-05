@@ -59,10 +59,10 @@ export async function editAttendeeInfo(app: FastifyInstance) {
           throw new BadRequest("Email already exists");
         }
       }
-
       let parsedCheckInDate;
       if (checkInDate) {
         parsedCheckInDate = parseISO(checkInDate);
+
         if (!isValid(parsedCheckInDate)) {
           throw new BadRequest("Invalid check-in date format");
         }
