@@ -7,7 +7,7 @@ import { parseISO, isValid } from "date-fns";
 
 export async function editAttendeeInfo(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().put(
-    "/attendees/:ticketId/edit",
+    "/attendees/:ticketId",
     {
       schema: {
         summary: "Edit attendee's info",
@@ -19,7 +19,7 @@ export async function editAttendeeInfo(app: FastifyInstance) {
           name: z.string().optional(),
           email: z.string().email().optional(),
           isCheckedIn: z.boolean().optional(),
-          checkInDate: z.string().optional(),
+          checkInDate: z.string().optional().nullable(),
         }),
         response: {
           200: z.object({
@@ -30,8 +30,14 @@ export async function editAttendeeInfo(app: FastifyInstance) {
               email: z.string().email(),
               createdAt: z.date(),
               isCheckedIn: z.boolean(),
-              checkInDate: z.date().nullish(),
+              checkInDate: z.date().nullable(),
             }),
+          }),
+          404: z.object({
+            message: z.string(),
+          }),
+          409: z.object({
+            message: z.string(),
           }),
         },
       },
@@ -44,49 +50,43 @@ export async function editAttendeeInfo(app: FastifyInstance) {
         where: { ticketId },
       });
 
-      if (!currentAttendee) {
-        throw new BadRequest("Attendee not found");
-      }
+      if (!currentAttendee)
+        return reply.status(404).send({ message: "Attendee not found" });
 
       if (email && email !== currentAttendee.email) {
-        const emailInUse = await prisma.attendee.findMany({
-          where: {
-            email,
-            NOT: { ticketId },
-          },
+        const emailExists = await prisma.attendee.count({
+          where: { email, NOT: { ticketId } },
         });
-        if (emailInUse.length > 0) {
-          throw new BadRequest("Email already exists");
-        }
-      }
-      let parsedCheckInDate;
-      if (checkInDate) {
-        parsedCheckInDate = parseISO(checkInDate);
-
-        if (!isValid(parsedCheckInDate)) {
-          throw new BadRequest("Invalid check-in date format");
-        }
+        if (emailExists) throw new BadRequest("Email already in use");
       }
 
-      await prisma.attendee.update({
+      let parsedCheckInDate = null;
+      if (isCheckedIn) {
+        parsedCheckInDate =
+          checkInDate && isValid(parseISO(checkInDate))
+            ? parseISO(checkInDate)
+            : new Date();
+      }
+
+      const updatedAttendee = await prisma.attendee.update({
         where: { ticketId },
         data: {
-          name: name ?? currentAttendee.name,
-          email: email ?? currentAttendee.email,
-          isCheckedIn: isCheckedIn ?? currentAttendee.isCheckedIn,
+          name: name ?? undefined,
+          email: email ?? undefined,
+          isCheckedIn,
           checkInDate: isCheckedIn ? parsedCheckInDate : null,
         },
       });
 
       reply.status(200).send({
-        message: "Attendee updated successfully",
+        message: "Attendee information updated successfully",
         attendee: {
-          ticketId,
-          name: name ?? currentAttendee.name,
-          email: email ?? currentAttendee.email,
-          createdAt: currentAttendee.createdAt,
-          isCheckedIn: isCheckedIn ?? currentAttendee.isCheckedIn,
-          checkInDate: isCheckedIn ? parsedCheckInDate : null,
+          ticketId: updatedAttendee.ticketId,
+          name: updatedAttendee.name,
+          email: updatedAttendee.email,
+          createdAt: updatedAttendee.createdAt,
+          isCheckedIn: updatedAttendee.isCheckedIn,
+          checkInDate: updatedAttendee.checkInDate,
         },
       });
     }

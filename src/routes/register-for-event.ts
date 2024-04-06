@@ -23,6 +23,11 @@ export async function registerForEvent(app: FastifyInstance) {
           201: z.object({
             attendeeId: z.number(),
             ticketId: z.string(),
+            name: z.string(),
+            email: z.string().email(),
+            createdAt: z.date(),
+            isCheckedIn: z.boolean(),
+            checkInDate: z.date().nullable(),
           }),
         },
       },
@@ -93,6 +98,11 @@ export async function registerForEvent(app: FastifyInstance) {
       return reply.status(201).send({
         attendeeId: attendees.id,
         ticketId,
+        name: attendees.name,
+        email: attendees.email,
+        createdAt: attendees.createdAt,
+        isCheckedIn: attendees.isCheckedIn,
+        checkInDate: attendees.checkInDate,
       });
     }
   );

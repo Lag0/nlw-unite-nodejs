@@ -3,7 +3,7 @@ POST http://localhost:3333/events
 Content-Type: application/json
 
 {
-  "title": "NLW SUMMIT V2",
+  "title": "NLW SUMMIT V3",
   "maximumAttendees": 2
 }
 
@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "name": "Diego Fernandes",
-  "email": "diego@rocketseat.com.br"
+  "email": "diego@2rocketseat.com.br"
 }
 
 ### Get Event Info
@@ -29,10 +29,10 @@ GET http://localhost:3333/attendees/m8f6Nf5grD/check-in
 GET http://localhost:3333/events/4d581edb-3f8c-4224-9182-c4398cfea080/attendees
 
 ### Edit Attendee Info
-PUT http://localhost:3333/attendees/9iVLX0Fwo7/edit
+PUT http://localhost:3333/attendees/f9XG8ans5w
 Content-Type: application/json
 
 {
-  "isCheckedIn": false,
-  "checkInDate": ""
+  "name": "Diego Fernandes",
+  "isCheckedIn": true
 }
