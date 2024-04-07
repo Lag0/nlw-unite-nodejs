@@ -39,3 +39,6 @@ Content-Type: application/json
   "name": "Diego Fernandes",
   "isCheckedIn": true
 }
+
+### Get All Events
+GET http://localhost:3333/events
