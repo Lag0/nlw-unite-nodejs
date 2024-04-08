@@ -3,8 +3,7 @@ POST http://localhost:3333/events
 Content-Type: application/json
 
 {
-  "title": "NLW SUMMIT V3",
-  "maximumAttendees": 2
+  "title": "NLW SUMMIT V4"
 }
 
 ### Register a New Attendee
