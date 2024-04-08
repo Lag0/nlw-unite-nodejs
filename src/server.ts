@@ -19,6 +19,7 @@ import { errorHandler } from "./error-handler";
 import { editAttendeeInfo } from "./routes/edit-attendee-info";
 import { deleteAttendee } from "./routes/delete-attendee";
 import { getAllEvents } from "./routes/get-all-events";
+import { deleteEvent } from "./routes/delete-event";
 
 const app = fastify();
 
@@ -59,6 +60,7 @@ const routes = [
   { plugin: editAttendeeInfo },
   { plugin: deleteAttendee },
   { plugin: getAllEvents },
+  { plugin: deleteEvent },
 ];
 
 routes.forEach(({ plugin }) => app.register(plugin));

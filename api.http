@@ -3,11 +3,13 @@ POST http://localhost:3333/events
 Content-Type: application/json
 
 {
-  "title": "NLW SUMMIT V4"
+  "title": "NLW Unite",
+  "details": "NLW Unite is a free event"
+
 }
 
 ### Register a New Attendee
-POST http://localhost:3333/events/4d581edb-3f8c-4224-9182-c4398cfea080/attendees
+POST http://localhost:3333/events/396fffb3-c127-4f02-a3f2-e25decbdfd5e/attendees
 Content-Type: application/json
 
 {
@@ -41,3 +43,6 @@ Content-Type: application/json
 
 ### Get All Events
 GET http://localhost:3333/events
+
+### Delete Event
+DELETE http://localhost:3333/events/2b4ea6ee-4345-4971-b475-bb7e21d824be

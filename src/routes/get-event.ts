@@ -34,6 +34,9 @@ export async function getEvent(app: FastifyInstance) {
       const { eventId } = request.params;
 
       const event = await prisma.event.findUnique({
+        where: {
+          id: eventId,
+        },
         select: {
           id: true,
           title: true,
@@ -47,9 +50,6 @@ export async function getEvent(app: FastifyInstance) {
               attendees: true,
             },
           },
-        },
-        where: {
-          id: eventId,
         },
       });
 
