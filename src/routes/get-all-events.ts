@@ -40,6 +40,9 @@ export async function getAllEvents(app: FastifyInstance) {
           },
           price: true,
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       });
 
       const formattedEvents = events.map((event) => ({

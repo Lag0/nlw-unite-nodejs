@@ -26,6 +26,7 @@ export async function createEvent(app: FastifyInstance) {
             details: z.string().nullable(),
             maximumAttendees: z.number().nullable(),
             price: z.number().nullable(),
+            createdAt: z.date(),
           }),
         },
       },
@@ -34,6 +35,7 @@ export async function createEvent(app: FastifyInstance) {
       const { title, details, maximumAttendees, price } = request.body;
 
       const slug = generateSlug(title);
+      const date = new Date();
 
       const eventWithSameSlug = await prisma.event.findUnique({
         where: { slug },
@@ -50,6 +52,7 @@ export async function createEvent(app: FastifyInstance) {
           details: details,
           maximumAttendees: maximumAttendees,
           price: price,
+          createdAt: date,
         },
       });
 
@@ -60,6 +63,7 @@ export async function createEvent(app: FastifyInstance) {
         details: event.details,
         maximumAttendees: event.maximumAttendees,
         price: event.price,
+        createdAt: date,
       });
     }
   );
