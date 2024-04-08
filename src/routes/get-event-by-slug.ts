@@ -9,7 +9,7 @@ export async function getEventBySlug(app: FastifyInstance) {
     "/events/slug/:slug",
     {
       schema: {
-        summary: "Get details of an event",
+        summary: "Get details of an event by slug",
         tags: ["Events"],
         params: z.object({
           slug: z.string(),
