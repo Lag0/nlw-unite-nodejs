@@ -24,6 +24,7 @@ export async function getEvent(app: FastifyInstance) {
               maximumAttendees: z.number().nullable(),
               currentAttendees: z.number(),
               price: z.number().nullable(),
+              createdAt: z.date(),
             }),
           }),
         },
@@ -39,12 +40,13 @@ export async function getEvent(app: FastifyInstance) {
           slug: true,
           details: true,
           maximumAttendees: true,
+          price: true,
+          createdAt: true,
           _count: {
             select: {
               attendees: true,
             },
           },
-          price: true,
         },
         where: {
           id: eventId,
@@ -64,6 +66,7 @@ export async function getEvent(app: FastifyInstance) {
           maximumAttendees: event.maximumAttendees,
           currentAttendees: event._count.attendees,
           price: event.price,
+          createdAt: event.createdAt,
         },
       });
     }

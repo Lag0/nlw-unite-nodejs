@@ -14,7 +14,7 @@ model Event {
   slug             String     @unique
   maximumAttendees Int?       @map("maximum_attendees")
   price            Float?
-  createdAt        DateTime?  @default(now()) @map("created_at")
+  createdAt        DateTime   @default(now()) @map("created_at")
   attendees        Attendee[]
 
   @@map("events")
