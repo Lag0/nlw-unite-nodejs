@@ -10,6 +10,10 @@ export async function getAllEvents(app: FastifyInstance) {
       schema: {
         summary: "Get a list of all events",
         tags: ["Events"],
+        querystring: z.object({
+          query: z.string().nullish(),
+          pageIndex: z.string().nullish().default("0").transform(Number),
+        }),
         response: {
           200: z.array(
             z.object({
@@ -27,6 +31,8 @@ export async function getAllEvents(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
+      const { pageIndex, query } = request.query;
+
       const events = await prisma.event.findMany({
         select: {
           id: true,
@@ -42,6 +48,14 @@ export async function getAllEvents(app: FastifyInstance) {
           },
           price: true,
         },
+        where: {
+          title: {
+            contains: query ? query : undefined,
+            mode: "insensitive",
+          },
+        },
+        take: 10,
+        skip: pageIndex * 10,
         orderBy: {
           createdAt: "desc",
         },
