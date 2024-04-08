@@ -14,13 +14,18 @@ export async function createEvent(app: FastifyInstance) {
         tags: ["Events"],
         body: z.object({
           title: z.string().min(4),
-          details: z.string().min(4).nullable().optional(),
-          maximumAttendees: z.number().int().positive().nullable().optional(),
-          price: z.number().nullable().optional(),
+          details: z.string().min(4).optional(),
+          maximumAttendees: z.number().int().positive().optional().nullable(),
+          price: z.number().positive().optional().nullable(),
         }),
         response: {
           201: z.object({
-            eventId: z.string().uuid(),
+            id: z.string().uuid(),
+            title: z.string(),
+            slug: z.string(),
+            details: z.string().nullable(),
+            maximumAttendees: z.number().nullable(),
+            price: z.number().nullable(),
           }),
         },
       },
@@ -31,26 +36,31 @@ export async function createEvent(app: FastifyInstance) {
       const slug = generateSlug(title);
 
       const eventWithSameSlug = await prisma.event.findUnique({
-        where: {
-          slug,
-        },
+        where: { slug },
       });
 
-      if (eventWithSameSlug !== null) {
+      if (eventWithSameSlug) {
         throw new BadRequest("An event with the same slug already exists");
       }
 
       const event = await prisma.event.create({
         data: {
           title,
-          details,
-          maximumAttendees,
+          slug,
+          details: details,
+          maximumAttendees: maximumAttendees,
           price: price,
-          slug: slug,
         },
       });
 
-      return reply.status(201).send({ eventId: event.id });
+      return reply.status(201).send({
+        id: event.id,
+        title: event.title,
+        slug: event.slug,
+        details: event.details,
+        maximumAttendees: event.maximumAttendees,
+        price: event.price,
+      });
     }
   );
 }
