@@ -20,6 +20,7 @@ import { editAttendeeInfo } from "./routes/edit-attendee-info";
 import { deleteAttendee } from "./routes/delete-attendee";
 import { getAllEvents } from "./routes/get-all-events";
 import { deleteEvent } from "./routes/delete-event";
+import { getEventAttendeesBySlug } from "./routes/get-event-attendees-by-slug";
 
 const app = fastify();
 
@@ -61,6 +62,7 @@ const routes = [
   { plugin: deleteAttendee },
   { plugin: getAllEvents },
   { plugin: deleteEvent },
+  { plugin: getEventAttendeesBySlug },
 ];
 
 routes.forEach(({ plugin }) => app.register(plugin));

@@ -31,6 +31,9 @@ GET http://localhost:3333/attendees/m8f6Nf5grD/check-in
 ### Get All Attendees
 GET http://localhost:3333/events/4d581edb-3f8c-4224-9182-c4398cfea080/attendees
 
+### Get All Attendees by Event Slug
+GET http://localhost:3333/events/slug/innx-grand-opening/attendees
+
 ### Delete Attendee
 DELETE http://localhost:3333/attendees/-70eviYCOI
 
