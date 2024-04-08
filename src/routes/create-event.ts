@@ -14,7 +14,7 @@ export async function createEvent(app: FastifyInstance) {
         tags: ["Events"],
         body: z.object({
           title: z.string().min(4),
-          details: z.string().min(4).optional(),
+          details: z.string().min(4).optional().nullable(),
           maximumAttendees: z.number().int().positive().optional().nullable(),
           price: z.number().positive().optional().nullable(),
         }),
