@@ -3,9 +3,11 @@ POST http://localhost:3333/events
 Content-Type: application/json
 
 {
-  "title": "NLW Unite",
-  "details": "NLW Unite is a free event"
-
+  "title": "INNX Grand Opening",
+  "details": "Grand opening for INNX Business Club",
+  "maximumAttendees": null,
+  "price": null,
+  "createdAt": "2024-04-08T14:55:32.302Z"
 }
 
 ### Register a New Attendee
