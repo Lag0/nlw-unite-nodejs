@@ -57,7 +57,8 @@ export async function editAttendeeInfo(app: FastifyInstance) {
         const emailExists = await prisma.attendee.count({
           where: { email, NOT: { ticketId } },
         });
-        if (emailExists) throw new BadRequest("Email already in use");
+        if (emailExists)
+          return reply.status(409).send({ message: "Email already in use" });
       }
 
       let parsedCheckInDate = null;

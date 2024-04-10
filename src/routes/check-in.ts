@@ -25,6 +25,9 @@ export async function CheckIn(app: FastifyInstance) {
               checkInDate: z.date().nullable(),
             }),
           }),
+          409: z.object({
+            message: z.string(),
+          }),
         },
       },
     },
@@ -38,7 +41,9 @@ export async function CheckIn(app: FastifyInstance) {
       });
 
       if (attendeeCheckIn?.isCheckedIn === true) {
-        throw new BadRequest("Attendee has already checked in");
+        return reply.status(409).send({
+          message: "Attendee already checked in",
+        });
       }
 
       const attendeeUpdated = await prisma.attendee.update({

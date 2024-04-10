@@ -29,6 +29,12 @@ export async function registerForEvent(app: FastifyInstance) {
             isCheckedIn: z.boolean(),
             checkInDate: z.date().nullable(),
           }),
+          403: z.object({
+            message: z.string(),
+          }),
+          409: z.object({
+            message: z.string(),
+          }),
         },
       },
     },
@@ -59,9 +65,10 @@ export async function registerForEvent(app: FastifyInstance) {
       });
 
       if (attendeeFromSameEvent !== null) {
-        throw new BadRequest(
-          "Attendee with the same e-mail already registered for this event"
-        ); //409
+        return reply.status(409).send({
+          message:
+            "Attendee with the same e-mail already registered for this event",
+        }); //409
       }
 
       const [event, amountOfAttendeesForEvent] = await Promise.all([
@@ -81,9 +88,9 @@ export async function registerForEvent(app: FastifyInstance) {
         event?.maximumAttendees &&
         amountOfAttendeesForEvent >= event?.maximumAttendees
       ) {
-        throw new BadRequest(
-          "Maximum number of attendees reached for this event"
-        ); // 403
+        return reply.status(403).send({
+          message: "Maximum number of attendees reached for this event",
+        });
       }
 
       const attendees = await prisma.attendee.create({

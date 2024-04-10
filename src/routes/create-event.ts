@@ -28,6 +28,9 @@ export async function createEvent(app: FastifyInstance) {
             price: z.number().nullable(),
             createdAt: z.date(),
           }),
+          409: z.object({
+            message: z.string(),
+          }),
         },
       },
     },
@@ -42,7 +45,9 @@ export async function createEvent(app: FastifyInstance) {
       });
 
       if (eventWithSameSlug) {
-        throw new BadRequest("An event with the same slug already exists");
+        return reply
+          .status(409)
+          .send({ message: "Event with same slug already exists" });
       }
 
       const event = await prisma.event.create({

@@ -36,6 +36,9 @@ export async function getEventAttendeesBySlug(app: FastifyInstance) {
             ),
             total: z.number(),
           }),
+          404: z.object({
+            message: z.string(),
+          }),
         },
       },
     },
@@ -47,8 +50,8 @@ export async function getEventAttendeesBySlug(app: FastifyInstance) {
         where: { slug },
       });
 
-      if (!event) {
-        throw new BadRequest("Event not found");
+      if (event === null) {
+        return reply.status(404).send({ message: "Event not found" });
       }
 
       const [attendees, total] = await Promise.all([

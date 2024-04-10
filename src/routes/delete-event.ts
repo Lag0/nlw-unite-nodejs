@@ -17,6 +17,9 @@ export async function deleteEvent(app: FastifyInstance) {
           200: z.object({
             message: z.string(),
           }),
+          404: z.object({
+            message: z.string(),
+          }),
         },
       },
     },

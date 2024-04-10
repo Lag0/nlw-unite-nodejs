@@ -26,6 +26,9 @@ export async function getAttendeeBadge(app: FastifyInstance) {
               checkInUrl: z.string().url(),
             }),
           }),
+          404: z.object({
+            message: z.string(),
+          }),
         },
       },
     },
@@ -51,7 +54,7 @@ export async function getAttendeeBadge(app: FastifyInstance) {
       });
 
       if (attendee === null) {
-        throw new BadRequest("Attendee not found"); //404
+        return reply.status(404).send({ message: "Attendee not found" });
       }
 
       if (attendee.ticketId === null) {

@@ -36,6 +36,9 @@ export async function getEventAttendees(app: FastifyInstance) {
             ),
             total: z.number(),
           }),
+          404: z.object({
+            message: z.string(),
+          }),
         },
       },
     },
@@ -84,7 +87,7 @@ export async function getEventAttendees(app: FastifyInstance) {
       ]);
 
       if (eventExists === null) {
-        throw new BadRequest("Event not found");
+        return reply.status(404).send({ message: "Event not found" });
       }
 
       return reply.send({
